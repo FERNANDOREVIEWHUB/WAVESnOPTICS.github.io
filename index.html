@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAVES and OPTICS</title>
+<style>
+:root{
+  --bg:#050505; --surface:#0d0d0f; --surface2:#141416; --surface3:#1b1b1f;
+  --text:#f7f7f7; --muted:#a7a7ad; --red:#e50914; --red2:#ff3340; --redDark:#5c070d;
+  --line:#2b2b30; --good:#2bd576; --bad:#ff5260; --shadow:rgba(0,0,0,.48);
+}
+body.light{
+  --bg:#f5f5f5; --surface:#fff; --surface2:#ededed; --surface3:#e2e2e2;
+  --text:#111; --muted:#5c5c62; --red:#d5000c; --red2:#ef1e2a; --redDark:#ffd9dc;
+  --line:#d5d5d8; --shadow:rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;transition:background .25s,color .25s;
+}
+body:before,body:after{
+  content:"";position:fixed;z-index:-1;pointer-events:none;opacity:.5;
+}
+body:before{
+  width:420px;height:420px;right:-160px;top:-130px;border:1px solid var(--red);
+  transform:rotate(28deg);box-shadow:0 0 0 20px transparent,0 0 80px rgba(229,9,20,.08);
+}
+body:after{
+  width:300px;height:300px;left:-180px;bottom:-100px;border:1px solid var(--red);
+  transform:rotate(45deg);
+}
+button{font:inherit}
+.app{max-width:1220px;margin:auto;padding:24px}
+.screen{display:none}.screen.active{display:block;animation:rise .35s ease}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:30px;
+  padding:8px 0;
+}
+.brand{display:flex;align-items:center;gap:13px;cursor:pointer}
+.logo{
+  width:52px;height:52px;border-radius:16px;background:var(--red);display:grid;place-items:center;
+  position:relative;overflow:hidden;box-shadow:0 12px 30px rgba(229,9,20,.25);
+}
+.logo:before,.logo:after{content:"";position:absolute;border:2px solid white;border-radius:50%}
+.logo:before{width:34px;height:13px;transform:rotate(-8deg);top:13px}
+.logo:after{width:24px;height:9px;transform:rotate(8deg);bottom:12px}
+.logo-eye{
+  width:10px;height:10px;border-radius:50%;background:white;position:absolute;top:15px;left:21px;
+  box-shadow:0 0 0 3px var(--red);
+}
+.brand-title{font-size:18px;font-weight:950;letter-spacing:.08em;line-height:1}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:.16em;margin-top:5px;text-transform:uppercase}
+.mode{
+  border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;
+  padding:10px 13px;cursor:pointer;font-weight:800;transition:.2s;
+}
+.mode:hover{border-color:var(--red);transform:translateY(-1px)}
+.hero{
+  position:relative;overflow:hidden;border:1px solid var(--line);border-radius:28px;
+  background:linear-gradient(145deg,var(--surface),var(--surface2));padding:56px 48px;
+  box-shadow:0 30px 90px var(--shadow);
+}
+.hero:before{
+  content:"WAVES";position:absolute;right:-35px;top:5px;font-size:clamp(90px,16vw,210px);
+  font-weight:1000;color:transparent;-webkit-text-stroke:1px rgba(229,9,20,.18);
+  letter-spacing:-.08em;pointer-events:none;
+}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--red2);font-weight:900;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.dot{width:7px;height:7px;background:var(--red);border-radius:50%;box-shadow:0 0 18px var(--red)}
+h1{font-size:clamp(44px,8vw,92px);line-height:.92;letter-spacing:-.06em;margin:18px 0 18px;max-width:800px}
+h1 span{color:var(--red)}
+.hero-copy{max-width:720px;color:var(--muted);font-size:16px;line-height:1.75}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:34px 3px 14px}
+.section-head h2{font-size:22px;letter-spacing:-.02em}
+.section-head p{font-size:12px;color:var(--muted)}
+.gallery{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:14px;
+}
+.topic{
+  grid-column:span 4;min-height:178px;border:1px solid var(--line);border-radius:22px;background:var(--surface);
+  color:var(--text);text-align:left;padding:22px;cursor:pointer;position:relative;overflow:hidden;
+  transition:.22s;box-shadow:0 12px 30px var(--shadow);
+}
+.topic:hover{transform:translateY(-5px);border-color:var(--red);box-shadow:0 18px 42px rgba(229,9,20,.14)}
+.topic:after{
+  content:"";position:absolute;width:75px;height:75px;border:1px solid var(--red);right:-25px;bottom:-25px;
+  transform:rotate(45deg);opacity:.65;
+}
+.topic .num{font-size:11px;color:var(--red2);font-weight:950;letter-spacing:.12em}
+.topic b{display:block;font-size:22px;margin:22px 0 8px;letter-spacing:-.03em}
+.topic span{font-size:12px;color:var(--muted);line-height:1.5}
+.topic.wide{grid-column:span 8;background:linear-gradient(120deg,var(--redDark),var(--surface));border-color:rgba(229,9,20,.45)}
+.topic.wide b{font-size:28px}
+.topic.wide:after{width:140px;height:140px;right:-48px;bottom:-55px}
+.note{margin-top:20px;color:var(--muted);font-size:11px;line-height:1.6}
+.quiz-wrap{max-width:900px;margin:0 auto}
+.quiz-card{
+  border:1px solid var(--line);border-radius:26px;background:var(--surface);padding:30px;
+  box-shadow:0 28px 80px var(--shadow);
+}
+.quiztop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
+.label{color:var(--red2);font-weight:950;text-transform:uppercase;font-size:12px;letter-spacing:.12em}
+.count{color:var(--muted);font-size:12px}
+.track{height:5px;background:var(--surface3);border-radius:10px;overflow:hidden;margin-bottom:34px}
+.bar{height:100%;background:var(--red);width:0;transition:.3s}
+.question{font-size:clamp(24px,4vw,38px);line-height:1.25;letter-spacing:-.03em;margin-bottom:25px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice{
+  min-height:82px;display:flex;align-items:center;gap:14px;width:100%;padding:16px;
+  border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:16px;
+  text-align:left;cursor:pointer;transition:.16s;
+}
+.choice:hover:not(:disabled){border-color:var(--red);transform:translateY(-2px)}
+.choice:disabled{cursor:default}
+.letter{flex:0 0 36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--surface3);color:var(--text);font-weight:950}
+.correct{border-color:var(--good)!important;background:rgba(43,213,118,.09)!important}
+.correct .letter{background:var(--good);color:#04140b}
+.wrong{border-color:var(--bad)!important;background:rgba(255,82,96,.08)!important}
+.wrong .letter{background:var(--bad);color:#210307}
+.feedback{display:none;margin-top:18px;padding:17px;border-radius:15px;line-height:1.6}
+.feedback.show{display:block}.good{background:rgba(43,213,118,.08);border:1px solid var(--good)}.bad{background:rgba(255,82,96,.08);border:1px solid var(--bad)}
+.feedback b{display:block;margin-bottom:5px}
+.actions{display:flex;gap:10px;margin-top:16px}
+.next,.home,.restart{
+  border:0;border-radius:13px;padding:14px 18px;font-weight:900;cursor:pointer;font-size:14px;transition:.2s
+}
+.next{display:none;flex:1;background:var(--red);color:#fff}.next:hover,.restart:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.home{background:transparent;border:1px solid var(--line);color:var(--text)}.home:hover{border-color:var(--red)}
+.result-card{text-align:center;max-width:800px;margin:0 auto;border:1px solid var(--line);border-radius:26px;background:var(--surface);padding:48px 30px;box-shadow:0 30px 90px var(--shadow)}
+.score{font-size:76px;font-weight:1000;letter-spacing:-.07em;margin:18px 0 2px}.percent{color:var(--red2);font-weight:950;font-size:18px}
+.subtitle{color:var(--muted);line-height:1.7;margin:15px auto 28px;max-width:620px}
+.breakdown{display:grid;grid-template-columns:1fr 1fr;gap:9px;text-align:left;margin:25px 0}
+.row{display:flex;justify-content:space-between;gap:10px;background:var(--surface2);border:1px solid var(--line);padding:14px;border-radius:12px}
+.row b{color:var(--red2)}
+.restart{background:var(--red);color:#fff;width:100%}
+@media(max-width:850px){
+  .topic{grid-column:span 6}.topic.wide{grid-column:span 12}.hero{padding:40px 28px}
+}
+@media(max-width:620px){
+  .app{padding:14px}.hero{padding:34px 20px;border-radius:22px}.topbar{margin-bottom:18px}
+  .gallery{grid-template-columns:1fr}.topic,.topic.wide{grid-column:auto;min-height:150px}
+  .choices{grid-template-columns:1fr}.quiz-card{padding:20px}.actions{flex-direction:column}
+  .breakdown{grid-template-columns:1fr}h1{font-size:52px}
+}
+
+/* Startup loading screen + password gate */
+#startup{
+  position:fixed;inset:0;z-index:9999;background:#050505;color:#fff;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+#startup .startup-inner{text-align:center;position:relative;z-index:2}
+#startup .startup-logo{
+  width:112px;height:112px;border-radius:31px;background:#e50914;
+  display:grid;place-items:center;position:relative;margin:auto;
+  box-shadow:0 0 70px rgba(229,9,20,.28),0 22px 60px rgba(0,0,0,.6);
+  animation:logoPulse 1.8s ease-in-out infinite;
+}
+#startup .startup-logo:before,#startup .startup-logo:after{
+  content:"";position:absolute;border:4px solid #fff;border-radius:50%;
+}
+#startup .startup-logo:before{width:72px;height:27px;transform:rotate(-8deg);top:29px}
+#startup .startup-logo:after{width:51px;height:19px;transform:rotate(8deg);bottom:27px}
+#startup .startup-eye{
+  width:19px;height:19px;border-radius:50%;background:#fff;position:absolute;
+  top:34px;left:47px;box-shadow:0 0 0 6px #e50914;
+}
+#startup .startup-mark{
+  position:absolute;width:150px;height:150px;border:1px solid rgba(229,9,20,.35);
+  transform:rotate(45deg);animation:spinSlow 7s linear infinite;
+}
+#startup .startup-mark:nth-child(2){width:220px;height:220px;animation-direction:reverse;opacity:.45}
+@keyframes logoPulse{50%{transform:scale(1.05);box-shadow:0 0 95px rgba(229,9,20,.4),0 22px 60px rgba(0,0,0,.6)}}
+@keyframes spinSlow{to{transform:rotate(405deg)}}
+#startup.hide{animation:startupOut .45s ease forwards;pointer-events:none}
+@keyframes startupOut{to{opacity:0;visibility:hidden}}
+#loginGate{
+  position:fixed;inset:0;z-index:9998;background:#050505;color:#fff;
+  display:none;align-items:center;justify-content:center;padding:24px;
+}
+#loginGate.show{display:flex}
+.login-box{
+  width:min(420px,100%);padding:38px;border:1px solid #2b2b30;border-radius:25px;
+  background:#0d0d0f;box-shadow:0 30px 90px rgba(0,0,0,.6);text-align:center;
+}
+.login-mini-logo{
+  width:58px;height:58px;border-radius:17px;background:#e50914;margin:0 auto 22px;
+  position:relative;display:grid;place-items:center;
+}
+.login-mini-logo:before{
+  content:"";position:absolute;width:38px;height:14px;border:2px solid #fff;border-radius:50%;
+  transform:rotate(-8deg);
+}
+.login-mini-eye{width:9px;height:9px;border-radius:50%;background:#fff;position:absolute;top:18px}
+.login-box h2{font-size:28px;letter-spacing:-.04em;margin-bottom:8px}
+.login-box p{font-size:12px;color:#a7a7ad;line-height:1.6;margin-bottom:24px}
+.password-wrap{position:relative}
+.password-input{
+  width:100%;height:54px;border:1px solid #2b2b30;border-radius:14px;background:#141416;
+  color:#fff;padding:0 48px 0 16px;outline:none;font-size:15px;transition:.2s;
+}
+.password-input:focus{border-color:#e50914;box-shadow:0 0 0 3px rgba(229,9,20,.12)}
+.password-toggle{
+  position:absolute;right:7px;top:7px;height:40px;width:40px;border:0;border-radius:10px;
+  background:transparent;color:#a7a7ad;cursor:pointer;
+}
+.login-btn{
+  width:100%;height:52px;border:0;border-radius:14px;background:#e50914;color:#fff;
+  font-weight:950;margin-top:12px;cursor:pointer;transition:.2s;
+}
+.login-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.login-error{height:20px;margin-top:10px;color:#ff5260;font-size:12px;font-weight:800}
+body.appLocked{overflow:hidden}
+body.light #loginGate,body.light #startup{background:#050505}
+
+</style>
+</head>
+<body class="appLocked">
+<div id="startup" aria-label="Loading WAVES and OPTICS">
+  <div class="startup-mark"></div>
+  <div class="startup-mark"></div>
+  <div class="startup-inner">
+    <div class="startup-logo"><i class="startup-eye"></i></div>
+  </div>
+</div>
+
+<div id="loginGate" role="dialog" aria-modal="true" aria-label="WAVES and OPTICS login">
+  <div class="login-box">
+    <div class="login-mini-logo"><i class="login-mini-eye"></i></div>
+    <h2>Access Required</h2>
+    <p>Enter the password to open<br><strong>WAVES &amp; OPTICS</strong>.</p>
+    <form id="loginForm">
+      <div class="password-wrap">
+        <input id="passwordInput" class="password-input" type="password"
+               autocomplete="off" placeholder="Enter password" aria-label="Password">
+        <button class="password-toggle" type="button" onclick="togglePassword()" aria-label="Show password">◉</button>
+      </div>
+      <div id="loginError" class="login-error"></div>
+      <button class="login-btn" type="submit">ENTER REVIEWER →</button>
+    </form>
+  </div>
+</div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand" onclick="home()">
+      <div class="logo"><i class="logo-eye"></i></div>
+      <div><div class="brand-title">WAVES &amp; OPTICS</div><div class="brand-sub">Physics Review Studio</div></div>
+    </div>
+    <button class="mode" onclick="toggleMode()" id="modeBtn">☾ Dark</button>
+  </header>
+
+  <section id="home" class="screen active">
+    <div class="hero">
+      <div class="eyebrow"><i class="dot"></i> Interactive physics reviewer</div>
+      <h1>WAVES <span>&amp;</span><br>OPTICS</h1>
+      <p class="hero-copy">Explore physics concepts through a clean gallery of topic cards. Choose a topic, practice randomized questions, and review your performance instantly.</p>
+    </div>
+
+    <div class="section-head"><div><h2>Choose a topic</h2><p>Pick a square to begin your review.</p></div><p id="questionTotal"></p></div>
+    <div class="gallery">
+      <button class="topic" onclick="start('Wave Fundamentals')"><div class="num">01 / WAVES</div><b>Wave Fundamentals</b><span>Frequency, wavelength, amplitude, speed, period, and basic wave types.</span></button>
+      <button class="topic" onclick="start('Wave Motion')"><div class="num">02 / WAVES</div><b>Wave Motion</b><span>Oscillation, simple harmonic motion, resonance, phase, nodes, and antinodes.</span></button>
+      <button class="topic" onclick="start('Sound Waves')"><div class="num">03 / WAVES</div><b>Sound Waves</b><span>Pitch, loudness, Doppler effect, echoes, ultrasound, infrasound, and beats.</span></button>
+      <button class="topic" onclick="start('Wave Phenomena')"><div class="num">04 / WAVES</div><b>Wave Phenomena</b><span>Reflection, refraction, diffraction, interference, polarization, absorption, and transmission.</span></button>
+
+      <button class="topic" onclick="start('Mirrors')"><div class="num">05 / OPTICS</div><b>Mirrors</b><span>Plane, concave, convex, image formation, focal length, and ray behavior.</span></button>
+      <button class="topic" onclick="start('Reflection')"><div class="num">06 / OPTICS</div><b>Reflection</b><span>Regular and diffuse reflection, normals, lateral inversion, and mirror laws.</span></button>
+      <button class="topic" onclick="start('Refraction')"><div class="num">07 / OPTICS</div><b>Refraction</b><span>Snell's law, refractive index, apparent depth, dispersion, and total internal reflection.</span></button>
+      <button class="topic" onclick="start('Lenses')"><div class="num">08 / OPTICS</div><b>Lenses</b><span>Converging and diverging lenses, image formation, power, and optical instruments.</span></button>
+      <button class="topic" onclick="start('Interference')"><div class="num">09 / OPTICS</div><b>Interference</b><span>Constructive and destructive interference, coherence, fringes, and thin films.</span></button>
+      <button class="topic" onclick="start('Diffraction')"><div class="num">10 / OPTICS</div><b>Diffraction</b><span>Single slits, gratings, diffraction minima, wavelength, and wave spreading.</span></button>
+      <button class="topic" onclick="start('Nature of Light')"><div class="num">11 / LIGHT</div><b>Nature of Light</b><span>Electromagnetic waves, visible spectrum, speed of light, frequency, and wavelength.</span></button>
+      <button class="topic" onclick="start('Color and Dispersion')"><div class="num">12 / LIGHT</div><b>Color &amp; Dispersion</b><span>Color, visible wavelengths, prisms, rainbows, and dispersion.</span></button>
+      <button class="topic" onclick="start('Polarization')"><div class="num">13 / LIGHT</div><b>Polarization</b><span>Polarizers, glare reduction, transverse waves, and polarization behavior.</span></button>
+      <button class="topic" onclick="start('Photons and Quantum Light')"><div class="num">14 / LIGHT</div><b>Photons &amp; Quantum Light</b><span>Photons, energy, frequency, Planck's relation, and the photoelectric effect.</span></button>
+      <button class="topic" onclick="start('Sources of Light')"><div class="num">15 / LIGHT</div><b>Sources of Light</b><span>Luminous objects, LEDs, lasers, sunlight, and thermal light emission.</span></button>
+
+      <button class="topic wide" onclick="start('Mixed')"><div class="num">∞ / FULL REVIEW</div><b>Waves + Optics — Mixed Practice</b><span>Randomized practice across every topic in the reviewer. Perfect for a full review session.</span></button>
+    </div>
+    <p class="note">The original optics question bank is preserved from the uploaded reviewer, with additional Waves topic cards and questions added for broader coverage. This remains a reviewer, not an official PRC examination.</p>
+  </section>
+
+  <section id="quiz" class="screen">
+    <div class="quiz-wrap">
+      <div class="quiz-card">
+        <div class="quiztop"><span id="topic" class="label"></span><span id="count" class="count"></span></div>
+        <div class="track"><div id="bar" class="bar"></div></div>
+        <h2 id="q" class="question"></h2>
+        <div id="choices" class="choices"></div>
+        <div id="feedback" class="feedback"><b id="ft"></b><div id="fx"></div></div>
+        <div class="actions">
+          <button id="next" class="next" onclick="next()">Next Question →</button>
+          <button class="home" onclick="home()">← Topics</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="screen">
+    <div class="result-card">
+      <div class="eyebrow"><i class="dot"></i> Session complete</div>
+      <h1 style="font-size:clamp(40px,7vw,70px);margin-top:15px">REVIEW<br><span>RESULT</span></h1>
+      <div id="score" class="score"></div>
+      <div id="percent" class="percent"></div>
+      <p id="message" class="subtitle"></p>
+      <div id="breakdown" class="breakdown"></div>
+      <button class="restart" onclick="restart()">↻ Try Again</button>
+      <button class="home" style="width:100%;margin-top:10px" onclick="home()">Back to Topics</button>
+    </div>
+  </section>
+</div>
+
+<script>
+
+// Startup sequence: logo-only loading screen, then password gate.
+const ACCESS_PASSWORD = "WAVESANDOPTICS";
+const startup = document.getElementById("startup");
+const loginGate = document.getElementById("loginGate");
+const passwordInput = document.getElementById("passwordInput");
+const loginError = document.getElementById("loginError");
+
+function revealLogin(){
+  startup.classList.add("hide");
+  setTimeout(()=>{
+    startup.style.display="none";
+    loginGate.classList.add("show");
+    passwordInput.focus();
+  },450);
+}
+
+setTimeout(revealLogin, 1800);
+
+document.getElementById("loginForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  if(passwordInput.value === ACCESS_PASSWORD){
+    loginError.textContent="";
+    loginGate.classList.remove("show");
+    document.body.classList.remove("appLocked");
+    passwordInput.value="";
+  }else{
+    loginError.textContent="Incorrect password. Try again.";
+    passwordInput.value="";
+    passwordInput.focus();
+  }
+});
+
+function togglePassword(){
+  const isPassword=passwordInput.type==="password";
+  passwordInput.type=isPassword?"text":"password";
+}
+
+const originalBank = [{"topic":"Mirrors","question":"A student stands 2 m in front of a plane mirror. How far behind the mirror is the image formed?","choices":["1 m","2 m","3 m","4 m"],"answer":"2 m","explanation":"A plane mirror forms an image the same distance behind the mirror as the object is in front."},{"topic":"Mirrors","question":"Which type of mirror is commonly used as a security mirror in stores because it provides a wide field of view?","choices":["Plane","Concave","Convex","Parabolic"],"answer":"Convex","explanation":"A convex mirror diverges reflected rays and produces a wider field of view."},{"topic":"Mirrors","question":"An object is placed beyond the center of curvature of a concave mirror. The image formed is generally:","choices":["virtual, upright, enlarged","real, inverted, diminished","real, upright, enlarged","virtual, inverted, diminished"],"answer":"real, inverted, diminished","explanation":"For an object beyond C, a concave mirror forms a real, inverted, diminished image between C and F."},{"topic":"Mirrors","question":"Which point on the principal axis of a spherical mirror is equidistant from every point on the reflecting surface?","choices":["Focus","Pole","Center of curvature","Vertex"],"answer":"Center of curvature","explanation":"The center of curvature is the center of the sphere of which the mirror is a part."},{"topic":"Mirrors","question":"A concave mirror has a focal length of 10 cm. What is its radius of curvature?","choices":["5 cm","10 cm","20 cm","40 cm"],"answer":"20 cm","explanation":"For a spherical mirror, R = 2f."},{"topic":"Mirrors","question":"Which mirror can form a real, inverted image?","choices":["Plane only","Convex only","Concave","All mirrors"],"answer":"Concave","explanation":"A concave mirror can form real inverted images when the object is beyond the focal point."},{"topic":"Mirrors","question":"When an object is placed between the focal point and a concave mirror, the image is:","choices":["real and inverted","virtual, upright, and enlarged","real and diminished","virtual and inverted"],"answer":"virtual, upright, and enlarged","explanation":"Inside the focal length, a concave mirror produces a magnified upright virtual image."},{"topic":"Mirrors","question":"The image formed by a convex mirror is always:","choices":["real and inverted","virtual, upright, and diminished","real and upright","virtual and enlarged"],"answer":"virtual, upright, and diminished","explanation":"A convex mirror always produces a virtual, upright, diminished image."},{"topic":"Mirrors","question":"Which principle explains why the angle of incidence equals the angle of reflection?","choices":["Law of refraction","Law of reflection","Snell's law","Lens equation"],"answer":"Law of reflection","explanation":"The law of reflection states that the incident and reflected angles, measured from the normal, are equal."},{"topic":"Mirrors","question":"A plane mirror produces an image that is laterally inverted. This means the image:","choices":["is upside down","is reversed left-to-right","is magnified","is reduced"],"answer":"is reversed left-to-right","explanation":"Lateral inversion is the apparent left-right reversal produced by a plane mirror."},{"topic":"Mirrors","question":"A dentist uses a concave mirror to inspect a tooth at close range primarily because it can produce a:","choices":["diminished real image","magnified upright virtual image","magnified inverted real image","same-size virtual image"],"answer":"magnified upright virtual image","explanation":"An object inside the focal length of a concave mirror produces an enlarged upright virtual image."},{"topic":"Mirrors","question":"If the focal length of a concave mirror is positive under the Cartesian sign convention, the mirror is being treated as a:","choices":["converging mirror","diverging mirror","plane mirror","transparent mirror"],"answer":"converging mirror","explanation":"A concave mirror is a converging mirror because parallel incident rays converge after reflection."},{"topic":"Mirrors","question":"A ray parallel to the principal axis of a concave mirror is reflected through the:","choices":["pole","center of curvature","focus","vertex only"],"answer":"focus","explanation":"A principal ray parallel to the axis reflects through the focal point."},{"topic":"Mirrors","question":"If an object is at the center of curvature of a concave mirror, its image is:","choices":["at the focus and enlarged","at C, same size and inverted","behind the mirror and upright","at infinity"],"answer":"at C, same size and inverted","explanation":"At C, the image is formed at C, real, inverted, and equal in size."},{"topic":"Mirrors","question":"Which device uses multiple mirrors to allow viewing around obstacles?","choices":["Microscope","Periscope","Projector","Thermometer"],"answer":"Periscope","explanation":"A periscope commonly uses plane mirrors or prisms to redirect light."},{"topic":"Reflection","question":"Reflection from a smooth surface in which parallel incident rays remain orderly after reflection is called:","choices":["diffuse reflection","regular reflection","refraction","diffraction"],"answer":"regular reflection","explanation":"Regular reflection occurs on smooth surfaces."},{"topic":"Reflection","question":"The normal to a reflecting surface is a line that is:","choices":["parallel to the surface","perpendicular to the surface","at 45° to the surface","tangent to the surface"],"answer":"perpendicular to the surface","explanation":"The normal is defined as a line perpendicular to the surface at the point of incidence."},{"topic":"Reflection","question":"A ray strikes a plane mirror at an angle of incidence of 35°. What is its angle of reflection?","choices":["25°","35°","55°","70°"],"answer":"35°","explanation":"By the law of reflection, the angle of incidence equals the angle of reflection."},{"topic":"Reflection","question":"A light ray strikes a mirror along the normal. What is the angle between the incident and reflected rays?","choices":["0°","45°","90°","180°"],"answer":"0°","explanation":"The ray retraces its path when it strikes normally, so the angle between the two rays is 0°."},{"topic":"Reflection","question":"Which statement best describes diffuse reflection?","choices":["It occurs only in mirrors.","It sends reflected rays in many directions due to surface irregularities.","It requires a transparent medium.","It violates the law of reflection."],"answer":"It sends reflected rays in many directions due to surface irregularities.","explanation":"Each ray still obeys the law of reflection, but surface normals vary across a rough surface."},{"topic":"Reflection","question":"Why can a person see an object that is not directly in front of a mirror?","choices":["Light is created by the mirror.","Reflected light travels from the object toward the observer.","The mirror bends light by refraction.","The object emits reflected images directly."],"answer":"Reflected light travels from the object toward the observer.","explanation":"The observer sees the object because light from it reaches the eye after reflection."},{"topic":"Reflection","question":"Which law is fundamental to determining the path of a reflected ray?","choices":["Newton's first law","Law of reflection","Ohm's law","Snell's law"],"answer":"Law of reflection","explanation":"The law of reflection relates the incident and reflected angles."},{"topic":"Reflection","question":"If the angle between an incident ray and the mirror surface is 20°, the angle of incidence measured from the normal is:","choices":["20°","70°","90°","110°"],"answer":"70°","explanation":"The normal is 90° to the surface, so the angle from the normal is 90° − 20° = 70°."},{"topic":"Reflection","question":"The apparent position of an object behind a plane mirror is called a:","choices":["real image","virtual image","focal image","projected image"],"answer":"virtual image","explanation":"The rays do not actually meet behind a plane mirror; their extensions appear to meet there."},{"topic":"Reflection","question":"Which statement about a plane-mirror image is correct?","choices":["It can be projected onto a screen.","It is always real.","It is virtual and the same size as the object.","It is always smaller than the object."],"answer":"It is virtual and the same size as the object.","explanation":"A plane mirror forms a virtual image equal in size to the object."},{"topic":"Reflection","question":"If a plane mirror is rotated by 10° while the incident ray remains fixed, the reflected ray rotates by:","choices":["5°","10°","20°","40°"],"answer":"20°","explanation":"A plane mirror rotation of θ causes the reflected ray to rotate by 2θ."},{"topic":"Reflection","question":"Which surface is most likely to produce regular reflection?","choices":["Unpolished concrete","Rough paper","Calm water surface","Crushed stone"],"answer":"Calm water surface","explanation":"A smooth water surface can act as a specular reflector."},{"topic":"Reflection","question":"The image in a plane mirror appears behind the mirror because:","choices":["light physically travels behind it","the reflected rays appear to originate from behind the mirror","the mirror emits light","the eye reverses the rays"],"answer":"the reflected rays appear to originate from behind the mirror","explanation":"Backward extensions of reflected rays meet at the virtual image location."},{"topic":"Reflection","question":"A person raises their right hand. In a plane mirror, the image appears to raise its:","choices":["right hand","left hand","both hands","neither hand"],"answer":"left hand","explanation":"The image shows lateral inversion, producing an apparent left-right reversal."},{"topic":"Reflection","question":"The brightness of a reflected image depends partly on the surface's:","choices":["reflectivity","mass only","temperature only","density only"],"answer":"reflectivity","explanation":"Reflectivity describes how effectively a surface reflects incident radiation."},{"topic":"Refraction","question":"The bending of light when it passes obliquely from one transparent medium to another is called:","choices":["reflection","refraction","interference","polarization"],"answer":"refraction","explanation":"Refraction occurs because light changes speed between media."},{"topic":"Refraction","question":"When light travels from air into glass at an angle, it generally bends:","choices":["away from the normal","toward the normal","along the surface","back toward the source"],"answer":"toward the normal","explanation":"Glass has a higher refractive index than air, so the ray bends toward the normal."},{"topic":"Refraction","question":"When light passes from glass into air at an angle, it generally bends:","choices":["toward the normal","away from the normal","perpendicular to the surface","not at all"],"answer":"away from the normal","explanation":"The ray speeds up when entering the less optically dense medium."},{"topic":"Refraction","question":"Which law quantitatively relates the angles of incidence and refraction?","choices":["Law of reflection","Snell's law","Newton's law","Hooke's law"],"answer":"Snell's law","explanation":"Snell's law relates refractive indices and the sines of the incident and refracted angles."},{"topic":"Refraction","question":"The refractive index of a medium is defined as the ratio of the speed of light in vacuum to the speed of light in the:","choices":["same vacuum","medium","source","lens only"],"answer":"medium","explanation":"n = c/v, where c is the speed in vacuum and v is speed in the medium."},{"topic":"Refraction","question":"A coin at the bottom of a pool appears shallower than it really is because of:","choices":["reflection","refraction","diffraction","interference"],"answer":"refraction","explanation":"Light from the coin bends as it exits water, causing the apparent depth to be less than the real depth."},{"topic":"Refraction","question":"When light enters a medium with a higher refractive index, its speed:","choices":["increases","decreases","becomes zero","remains equal to c"],"answer":"decreases","explanation":"The speed of light in a medium is v = c/n."},{"topic":"Refraction","question":"Which quantity of a light wave remains unchanged when it passes from one medium to another?","choices":["frequency","speed","wavelength","direction always"],"answer":"frequency","explanation":"The frequency is fixed by the source; speed and wavelength change between media."},{"topic":"Refraction","question":"If light slows down when entering a medium but its frequency remains constant, its wavelength:","choices":["increases","decreases","becomes infinite","does not exist"],"answer":"decreases","explanation":"Since v = fλ, a lower speed with constant frequency means a shorter wavelength."},{"topic":"Refraction","question":"Total internal reflection can occur when light travels from:","choices":["lower to higher refractive index","higher to lower refractive index","vacuum to air only","air to glass only"],"answer":"higher to lower refractive index","explanation":"The ray must travel from a higher-index medium toward a lower-index medium and exceed the critical angle."},{"topic":"Refraction","question":"Which technology relies strongly on total internal reflection?","choices":["Fiber-optic communication","Incandescent bulb filament","Plane mirror only","Solar cell only"],"answer":"Fiber-optic communication","explanation":"Optical fibers guide light through repeated total internal reflection."},{"topic":"Refraction","question":"A prism separates white light into colors primarily because different wavelengths:","choices":["have different refractive indices in the material","all travel at identical speeds in glass","are reflected equally","have identical frequencies"],"answer":"have different refractive indices in the material","explanation":"Different wavelengths are refracted by different amounts, producing dispersion."},{"topic":"Refraction","question":"A mirage on a hot road is primarily associated with:","choices":["refraction through layers of air at different temperatures","only reflection from the road","diffraction by dust","interference from sunlight"],"answer":"refraction through layers of air at different temperatures","explanation":"Temperature changes create refractive-index gradients that bend light."},{"topic":"Refraction","question":"If the angle of incidence is increased while light enters a denser medium, the angle of refraction generally:","choices":["increases but remains smaller than the incident angle","becomes larger than the incident angle","always becomes 90°","becomes zero"],"answer":"increases but remains smaller than the incident angle","explanation":"For entry into a higher-index medium, the refracted angle increases with incidence but remains closer to the normal."},{"topic":"Refraction","question":"The apparent bending of a pencil partly submerged in water is best explained by:","choices":["refraction at the water-air boundary","reflection at the pencil","diffraction at the surface","interference in the pencil"],"answer":"refraction at the water-air boundary","explanation":"Light from the submerged part changes direction as it crosses the water-air interface."},{"topic":"Lenses","question":"A convex lens is also called a:","choices":["diverging lens","converging lens","plane lens","reflecting lens"],"answer":"converging lens","explanation":"A convex lens converges parallel rays toward its principal focus."},{"topic":"Lenses","question":"A concave lens is also called a:","choices":["converging lens","diverging lens","cylindrical mirror","plane mirror"],"answer":"diverging lens","explanation":"A concave lens causes parallel rays to spread apart."},{"topic":"Lenses","question":"Which lens is thicker at the center than at the edges?","choices":["convex","concave","plane","hollow"],"answer":"convex","explanation":"A typical convex lens bulges outward and is thicker at the center."},{"topic":"Lenses","question":"An object is placed beyond 2F of a convex lens. The image is generally:","choices":["real, inverted, and diminished","virtual, upright, and enlarged","real, upright, and enlarged","virtual, inverted, and diminished"],"answer":"real, inverted, and diminished","explanation":"For an object beyond 2F, a convex lens forms a real inverted image between F and 2F."},{"topic":"Lenses","question":"An object is placed between F and 2F of a convex lens. The image is:","choices":["real, inverted, and enlarged","virtual, upright, and diminished","real, upright, and same size","virtual and inverted"],"answer":"real, inverted, and enlarged","explanation":"Between F and 2F, the image forms beyond 2F and is enlarged, real, and inverted."},{"topic":"Lenses","question":"When an object is placed inside the focal length of a convex lens, the image is:","choices":["real and inverted","virtual, upright, and enlarged","real and diminished","virtual and inverted"],"answer":"virtual, upright, and enlarged","explanation":"Inside F, the refracted rays diverge and their backward extensions form an enlarged virtual image."},{"topic":"Lenses","question":"Which lens is used in a simple magnifying glass?","choices":["Concave lens","Convex lens","Plane mirror","Convex mirror"],"answer":"Convex lens","explanation":"A convex lens acts as a magnifier when the object is placed within its focal length."},{"topic":"Lenses","question":"Myopia, or nearsightedness, is commonly corrected using a:","choices":["convex lens","concave lens","plane lens","cylindrical mirror"],"answer":"concave lens","explanation":"A concave lens diverges incoming light so the eye can focus it on the retina."},{"topic":"Lenses","question":"Hyperopia, or farsightedness, is commonly corrected using a:","choices":["concave lens","convex lens","plane mirror","convex mirror"],"answer":"convex lens","explanation":"A convex lens converges light before it enters the eye."},{"topic":"Lenses","question":"The principal axis of a lens is a line that passes through the:","choices":["focal point only","optical center and principal foci","edge of the lens only","screen only"],"answer":"optical center and principal foci","explanation":"The principal axis is the reference line through the optical center and focal points."},{"topic":"Lenses","question":"A ray passing through the optical center of a thin lens is approximately:","choices":["bent sharply","undeviated","reflected backward","absorbed"],"answer":"undeviated","explanation":"For a thin lens, a ray through the optical center is approximated as continuing straight."},{"topic":"Lenses","question":"The power of a lens is measured in:","choices":["watts","diopters","newtons","joules"],"answer":"diopters","explanation":"Lens power P = 1/f when f is in meters, and the unit is the diopter."},{"topic":"Lenses","question":"A lens has a focal length of 0.50 m. What is its power?","choices":["0.5 D","1 D","2 D","5 D"],"answer":"2 D","explanation":"P = 1/f = 1/0.50 = 2 diopters."},{"topic":"Lenses","question":"A negative lens power indicates a:","choices":["convex converging lens","concave diverging lens","plane mirror","convex mirror"],"answer":"concave diverging lens","explanation":"Negative focal length and power correspond to a diverging lens."},{"topic":"Lenses","question":"Which optical instrument uses lenses to produce a magnified view of very small objects?","choices":["Microscope","Periscope","Plane mirror","Pinhole camera only"],"answer":"Microscope","explanation":"A compound microscope uses objective and eyepiece lenses for high magnification."},{"topic":"Interference","question":"The phenomenon in which two or more waves overlap and produce a resultant wave is called:","choices":["interference","refraction","reflection","dispersion"],"answer":"interference","explanation":"Interference is the superposition of waves."},{"topic":"Interference","question":"Constructive interference occurs when waves meet:","choices":["out of phase by 180°","in phase","with no amplitude","at a boundary only"],"answer":"in phase","explanation":"In-phase waves reinforce one another."},{"topic":"Interference","question":"Destructive interference occurs when two waves of equal amplitude are completely out of phase by:","choices":["0°","45°","90°","180°"],"answer":"180°","explanation":"A phase difference of 180° causes equal-amplitude waves to cancel."},{"topic":"Interference","question":"In a double-slit experiment, bright fringes are produced by:","choices":["constructive interference","destructive interference","total internal reflection","refraction only"],"answer":"constructive interference","explanation":"Bright fringes correspond to maximum resultant intensity."},{"topic":"Interference","question":"In a double-slit experiment, dark fringes are produced by:","choices":["constructive interference","destructive interference","dispersion","regular reflection"],"answer":"destructive interference","explanation":"Dark fringes occur where waves cancel or reduce intensity."},{"topic":"Interference","question":"A necessary condition for a stable interference pattern is that the sources be:","choices":["coherent","very far apart","different colors","random"],"answer":"coherent","explanation":"Coherent sources maintain a constant phase relationship."},{"topic":"Interference","question":"Which observation provides evidence for the wave nature of light?","choices":["Double-slit interference","Photoelectric effect alone","Object weight","Thermal expansion"],"answer":"Double-slit interference","explanation":"A stable interference pattern is a characteristic wave phenomenon."},{"topic":"Interference","question":"If two waves have a path difference of one wavelength, the resulting interference is:","choices":["constructive","destructive","always absent","random"],"answer":"constructive","explanation":"A path difference of mλ corresponds to constructive interference."},{"topic":"Interference","question":"A path difference of half a wavelength corresponds to:","choices":["constructive interference","destructive interference","no reflection","refraction"],"answer":"destructive interference","explanation":"A path difference of (m + 1/2)λ produces destructive interference."},{"topic":"Interference","question":"The alternating bright and dark bands in Young's double-slit experiment are called:","choices":["interference fringes","critical angles","focal points","normal lines"],"answer":"interference fringes","explanation":"The bright and dark pattern is the interference fringe pattern."},{"topic":"Interference","question":"Thin-film colors in soap bubbles are caused mainly by interference between light waves:","choices":["reflected from different surfaces of the film","absorbed by the air","from two unrelated lamps only","produced by diffraction around the bubble"],"answer":"reflected from different surfaces of the film","explanation":"Reflections from the top and bottom surfaces of the thin film interfere."},{"topic":"Interference","question":"When two identical waves meet crest-to-crest, their amplitudes:","choices":["cancel","reinforce","become zero","change frequency"],"answer":"reinforce","explanation":"Crest-to-crest overlap is constructive interference."},{"topic":"Interference","question":"When two equal waves meet crest-to-trough, the resultant amplitude is ideally:","choices":["doubled","zero","unchanged at one amplitude","infinite"],"answer":"zero","explanation":"Equal-amplitude waves 180° out of phase cancel completely."},{"topic":"Interference","question":"Which condition produces a maximum intensity in a two-source interference pattern?","choices":["Path difference = mλ","Path difference = (m + 1/2)λ","Path difference = λ/4 only","No path difference rule"],"answer":"Path difference = mλ","explanation":"Constructive interference occurs when the path difference is an integer multiple of wavelength."},{"topic":"Interference","question":"The principle that the total displacement of overlapping waves equals the algebraic sum of their individual displacements is the principle of:","choices":["superposition","reflection","refraction","dispersion"],"answer":"superposition","explanation":"The superposition principle explains how overlapping waves combine."},{"topic":"Diffraction","question":"The bending or spreading of waves as they pass around obstacles or through openings is called:","choices":["diffraction","reflection","refraction","polarization"],"answer":"diffraction","explanation":"Diffraction describes wave spreading around obstacles and through apertures."},{"topic":"Diffraction","question":"Diffraction is most pronounced when the size of an opening is:","choices":["much larger than the wavelength","comparable to the wavelength","zero only","independent of wavelength"],"answer":"comparable to the wavelength","explanation":"Strong diffraction occurs when aperture size is comparable to wavelength."},{"topic":"Diffraction","question":"Which everyday phenomenon demonstrates diffraction of sound?","choices":["Hearing someone around a corner","Seeing your face in a mirror","A straw appearing bent","A rainbow"],"answer":"Hearing someone around a corner","explanation":"Sound wavelengths are large enough for noticeable diffraction around ordinary obstacles."},{"topic":"Diffraction","question":"A narrow single slit illuminated by monochromatic light produces a pattern containing:","choices":["a central bright maximum and side fringes","only one dark spot","only a rainbow","no intensity variations"],"answer":"a central bright maximum and side fringes","explanation":"Single-slit diffraction produces a broad central maximum with weaker side maxima."},{"topic":"Diffraction","question":"If the width of a single slit is decreased, the central diffraction maximum generally becomes:","choices":["narrower","wider","unchanged","completely absent"],"answer":"wider","explanation":"A narrower slit causes greater angular spreading."},{"topic":"Diffraction","question":"The phenomenon of diffraction supports the idea that light has:","choices":["wave behavior","only particle behavior","no measurable wavelength","no frequency"],"answer":"wave behavior","explanation":"Diffraction is a characteristic wave phenomenon."},{"topic":"Diffraction","question":"A diffraction grating consists of:","choices":["many closely spaced slits","one curved mirror","two convex lenses only","a single prism"],"answer":"many closely spaced slits","explanation":"A diffraction grating has many regularly spaced openings or lines."},{"topic":"Diffraction","question":"A diffraction grating can separate wavelengths because different wavelengths are diffracted:","choices":["at different angles","at exactly the same angle","without changing direction","only backward"],"answer":"at different angles","explanation":"The grating equation produces different diffraction angles for different wavelengths."},{"topic":"Diffraction","question":"For a grating, principal maxima occur when the path difference between adjacent slits is:","choices":["mλ","λ/2 only","2m + 1","zero only"],"answer":"mλ","explanation":"The grating condition is d sin θ = mλ."},{"topic":"Diffraction","question":"Which factor strongly affects the amount of diffraction?","choices":["Wavelength relative to aperture size","Mass of the light source","Temperature of the observer","Color of the screen only"],"answer":"Wavelength relative to aperture size","explanation":"Diffraction depends strongly on the ratio of wavelength to opening or obstacle size."},{"topic":"Diffraction","question":"Why is diffraction of radio waves around buildings often more noticeable than diffraction of visible light?","choices":["Radio waves have longer wavelengths","Radio waves have no frequency","Visible light has no wavelength","Radio waves travel only in straight lines"],"answer":"Radio waves have longer wavelengths","explanation":"Longer wavelengths diffract more effectively around objects of a given size."},{"topic":"Diffraction","question":"In a single-slit diffraction pattern, the central maximum is typically:","choices":["the widest and brightest","the narrowest and darkest","always absent","the same width as every side maximum"],"answer":"the widest and brightest","explanation":"The central maximum spans approximately twice the width of the secondary maxima."},{"topic":"Diffraction","question":"The condition for a minimum in single-slit diffraction is commonly written as:","choices":["a sin θ = mλ","a cos θ = mλ","a tan θ = mλ","a = m/λ"],"answer":"a sin θ = mλ","explanation":"For minima, a sin θ = mλ, where m = 1, 2, 3, ..."},{"topic":"Diffraction","question":"Which device can use diffraction to analyze the wavelengths present in light?","choices":["Spectrometer with a diffraction grating","Plane mirror","Convex mirror only","Thermometer"],"answer":"Spectrometer with a diffraction grating","explanation":"Diffraction gratings separate wavelengths, allowing spectral analysis."},{"topic":"Diffraction","question":"If the wavelength increases while the slit width remains fixed, diffraction spreading generally:","choices":["increases","decreases","becomes zero","does not change"],"answer":"increases","explanation":"A larger wavelength relative to the aperture produces stronger diffraction."}];
+const addedWaves = [{"topic":"Wave Fundamentals","question":"Which quantity describes the number of complete wave cycles passing a point each second?","choices":["Amplitude","Frequency","Wavelength","Phase"],"answer":"Frequency","explanation":"Frequency is the number of complete cycles per second, measured in hertz (Hz)."},{"topic":"Wave Fundamentals","question":"The distance between two successive crests of a transverse wave is the:","choices":["Period","Amplitude","Wavelength","Frequency"],"answer":"Wavelength","explanation":"Wavelength is the spatial distance between corresponding points on successive cycles, such as crest to crest."},{"topic":"Wave Fundamentals","question":"Which property of a wave is most directly related to the maximum displacement from equilibrium?","choices":["Frequency","Amplitude","Wavelength","Period"],"answer":"Amplitude","explanation":"Amplitude is the maximum displacement from the equilibrium position."},{"topic":"Wave Fundamentals","question":"A wave has a frequency of 5 Hz. Its period is:","choices":["0.2 s","2 s","5 s","10 s"],"answer":"0.2 s","explanation":"Period T = 1/f = 1/5 = 0.2 s."},{"topic":"Wave Fundamentals","question":"The relationship among wave speed v, frequency f, and wavelength λ is:","choices":["v = fλ","v = f/λ","v = λ/f","v = f + λ"],"answer":"v = fλ","explanation":"Wave speed equals frequency multiplied by wavelength."},{"topic":"Wave Fundamentals","question":"Which type of wave requires a material medium to propagate?","choices":["Mechanical wave","Electromagnetic wave","Light in vacuum","Radio wave"],"answer":"Mechanical wave","explanation":"Mechanical waves require a material medium, while electromagnetic waves can propagate through vacuum."},{"topic":"Wave Fundamentals","question":"In a transverse wave, particles of the medium vibrate:","choices":["parallel to the direction of travel","perpendicular to the direction of travel","only upward","without moving"],"answer":"perpendicular to the direction of travel","explanation":"In a transverse wave, the oscillation is perpendicular to the direction of propagation."},{"topic":"Wave Fundamentals","question":"In a longitudinal wave, regions of high particle density are called:","choices":["Rarefactions","Compressions","Nodes","Antinodes"],"answer":"Compressions","explanation":"Compressions are regions where particles are crowded together; rarefactions are regions where they are spread apart."},{"topic":"Wave Fundamentals","question":"Sound waves in air are primarily:","choices":["Transverse mechanical waves","Longitudinal mechanical waves","Electromagnetic waves","Surface waves only"],"answer":"Longitudinal mechanical waves","explanation":"Sound propagates through air as a longitudinal mechanical pressure wave."},{"topic":"Wave Fundamentals","question":"When a wave enters a different medium and its speed changes while its frequency stays fixed, its wavelength:","choices":["must change","must stay fixed","becomes zero","becomes infinite"],"answer":"must change","explanation":"Because v = fλ and frequency is fixed by the source, a change in speed requires a change in wavelength."},{"topic":"Wave Motion","question":"Simple harmonic motion occurs when the restoring force is proportional to displacement and directed:","choices":["away from equilibrium","toward equilibrium","perpendicular to displacement","randomly"],"answer":"toward equilibrium","explanation":"For simple harmonic motion, the restoring force is proportional to displacement and opposite in direction."},{"topic":"Wave Motion","question":"At the equilibrium position of an ideal oscillator, its displacement is:","choices":["Maximum","Zero","Infinite","Equal to its amplitude"],"answer":"Zero","explanation":"Equilibrium is the reference position, so displacement there is zero."},{"topic":"Wave Motion","question":"The time required for one complete oscillation is called the:","choices":["Frequency","Period","Amplitude","Wavelength"],"answer":"Period","explanation":"The period is the time for one complete cycle."},{"topic":"Wave Motion","question":"If the frequency of an oscillator doubles, its period becomes:","choices":["Twice as large","Half as large","Four times as large","Unchanged"],"answer":"Half as large","explanation":"Since T = 1/f, doubling frequency halves the period."},{"topic":"Wave Motion","question":"The maximum speed of an object in simple harmonic motion occurs at the:","choices":["Equilibrium position","Maximum displacement","Turning point only","Same point for all amplitudes"],"answer":"Equilibrium position","explanation":"In ideal SHM, speed is greatest as the oscillator passes through equilibrium."},{"topic":"Wave Motion","question":"A pendulum completes 20 oscillations in 10 seconds. Its frequency is:","choices":["0.5 Hz","2 Hz","10 Hz","20 Hz"],"answer":"2 Hz","explanation":"Frequency = number of oscillations / time = 20/10 = 2 Hz."},{"topic":"Wave Motion","question":"Resonance occurs when a periodic driving frequency is close to the system's:","choices":["mass","natural frequency","amplitude only","wavelength only"],"answer":"natural frequency","explanation":"A system can respond with very large amplitude when driven near its natural frequency."},{"topic":"Wave Motion","question":"Increasing damping in an oscillator generally causes its oscillation amplitude to:","choices":["increase indefinitely","decrease more rapidly","remain infinite","reverse frequency every cycle"],"answer":"decrease more rapidly","explanation":"Damping removes mechanical energy, reducing oscillation amplitude over time."},{"topic":"Wave Motion","question":"The phase difference between two points one full wavelength apart on a progressive wave is:","choices":["0°","90°","180°","360°"],"answer":"0°","explanation":"Points separated by one wavelength are in phase, equivalent to a 360° phase difference."},{"topic":"Wave Motion","question":"A node in a standing wave is a point of:","choices":["maximum displacement","zero displacement","maximum frequency","zero wavelength"],"answer":"zero displacement","explanation":"Nodes remain stationary in an ideal standing wave."},{"topic":"Sound Waves","question":"The pitch of a sound is primarily associated with its:","choices":["Frequency","Amplitude","Speed","Intensity only"],"answer":"Frequency","explanation":"Higher frequency corresponds to higher perceived pitch."},{"topic":"Sound Waves","question":"The loudness of a sound is most closely related to its wave's:","choices":["Amplitude","Frequency only","Wavelength only","Phase only"],"answer":"Amplitude","explanation":"Greater amplitude generally corresponds to greater sound intensity and perceived loudness."},{"topic":"Sound Waves","question":"The speed of sound is generally greatest in:","choices":["Vacuum","Gases","Liquids","Solids"],"answer":"Solids","explanation":"Sound usually travels fastest in solids because their particles interact strongly and efficiently transmit mechanical disturbances."},{"topic":"Sound Waves","question":"A sound source moves toward a stationary observer. The observer generally hears a frequency that is:","choices":["lower","higher","zero","unchanged in every case"],"answer":"higher","explanation":"The Doppler effect causes an increased observed frequency when the source approaches the observer."},{"topic":"Sound Waves","question":"An echo is produced mainly by:","choices":["Refraction","Reflection of sound","Polarization","Dispersion"],"answer":"Reflection of sound","explanation":"An echo is a reflected sound heard after the original sound."},{"topic":"Sound Waves","question":"Ultrasound refers to sound with frequencies:","choices":["below 20 Hz","above the normal human hearing range","between 20 and 200 Hz only","equal to zero"],"answer":"above the normal human hearing range","explanation":"Ultrasound is sound above approximately 20 kHz for typical human hearing."},{"topic":"Sound Waves","question":"Infrasonic sound has frequencies:","choices":["below the normal human hearing range","above 20 kHz","only at 1 kHz","equal to visible light"],"answer":"below the normal human hearing range","explanation":"Infrasound refers to frequencies below approximately 20 Hz."},{"topic":"Sound Waves","question":"Beats are heard when two sound waves have:","choices":["exactly the same frequency","slightly different frequencies","no amplitude","different media but identical frequencies"],"answer":"slightly different frequencies","explanation":"The interference of close frequencies produces periodic variations in loudness called beats."},{"topic":"Sound Waves","question":"If two tones have frequencies 256 Hz and 260 Hz, the beat frequency is:","choices":["2 Hz","4 Hz","256 Hz","516 Hz"],"answer":"4 Hz","explanation":"Beat frequency equals the absolute difference: |260 − 256| = 4 Hz."},{"topic":"Sound Waves","question":"The Doppler effect is a change in observed frequency caused by relative motion between the:","choices":["source and observer","medium and wavelength only","mirror and lens","amplitude and phase"],"answer":"source and observer","explanation":"Relative motion between source and observer changes the observed frequency."},{"topic":"Wave Phenomena","question":"When waves bend as they pass from one region to another because their speed changes, the phenomenon is:","choices":["Refraction","Reflection","Interference","Resonance"],"answer":"Refraction","explanation":"Refraction is the change in direction associated with a change in wave speed across a boundary."},{"topic":"Wave Phenomena","question":"When a wave strikes a boundary and returns into its original medium, it undergoes:","choices":["Reflection","Refraction","Dispersion","Polarization"],"answer":"Reflection","explanation":"Reflection occurs when a wave returns from a boundary into its original medium."},{"topic":"Wave Phenomena","question":"The spreading of waves around an obstacle or through a narrow opening is:","choices":["Diffraction","Reflection","Absorption","Transmission"],"answer":"Diffraction","explanation":"Diffraction is wave spreading around edges and through apertures."},{"topic":"Wave Phenomena","question":"A stable interference pattern requires sources with a constant phase relationship, known as:","choices":["coherence","dispersion","damping","resonance"],"answer":"coherence","explanation":"Coherent sources maintain a constant phase difference."},{"topic":"Wave Phenomena","question":"When two waves overlap and the resulting displacement is the sum of their individual displacements, this is the principle of:","choices":["Superposition","Refraction","Reflection","Dispersion"],"answer":"Superposition","explanation":"The superposition principle describes how overlapping waves combine."},{"topic":"Wave Phenomena","question":"Polarization is evidence that a wave is:","choices":["longitudinal only","transverse","mechanical only","nonperiodic"],"answer":"transverse","explanation":"Only transverse waves can exhibit polarization because their oscillations can be restricted to a direction perpendicular to propagation."},{"topic":"Wave Phenomena","question":"When wave energy is absorbed by a material and converted into other forms, the wave undergoes:","choices":["Absorption","Constructive interference","Reflection","Coherence"],"answer":"Absorption","explanation":"Absorption transfers wave energy into the material, often as thermal energy."},{"topic":"Wave Phenomena","question":"A wave that travels along a boundary between two media is often called a:","choices":["surface wave","vacuum wave","static wave","zero wave"],"answer":"surface wave","explanation":"Surface waves propagate along an interface, combining features of motion in and near the boundary."},{"topic":"Wave Phenomena","question":"The phenomenon in which a wave changes direction because it encounters a boundary but remains in the original medium is:","choices":["Reflection","Refraction","Transmission","Absorption"],"answer":"Reflection","explanation":"Reflection redirects the wave back into the original medium."},{"topic":"Wave Phenomena","question":"A wave entering a new medium without being reflected or absorbed is primarily being:","choices":["transmitted","polarized","damped","resonated"],"answer":"transmitted","explanation":"Transmission is the passage of wave energy through a boundary or material."},{"topic":"Nature of Light","question":"Which statement best describes the dual nature of light?","choices":["Light behaves only as a particle","Light behaves only as a wave","Light shows both wave-like and particle-like behavior","Light has no measurable properties"],"answer":"Light shows both wave-like and particle-like behavior","explanation":"Light exhibits both wave phenomena and particle-like behavior."},{"topic":"Nature of Light","question":"In vacuum, electromagnetic waves travel at approximately:","choices":["3.0 × 10⁶ m/s","3.0 × 10⁸ m/s","3.0 × 10¹⁰ m/s","3.0 × 10⁴ m/s"],"answer":"3.0 × 10⁸ m/s","explanation":"The speed of electromagnetic waves in vacuum is approximately 3.0 × 10⁸ m/s."},{"topic":"Nature of Light","question":"Which property distinguishes one color of visible light from another most directly?","choices":["Wavelength or frequency","Mass","Volume","Density of the observer"],"answer":"Wavelength or frequency","explanation":"Different colors correspond to different frequencies and wavelengths."},{"topic":"Nature of Light","question":"Light is classified as an electromagnetic wave because it consists of oscillating:","choices":["Electric and magnetic fields","Sound and pressure fields","Mass and density fields","Gravitational waves only"],"answer":"Electric and magnetic fields","explanation":"Electromagnetic radiation consists of coupled electric and magnetic fields."},{"topic":"Nature of Light","question":"Which visible-light color generally has the longest wavelength?","choices":["Violet","Blue","Green","Red"],"answer":"Red","explanation":"Red has the longest wavelength in the visible spectrum."},{"topic":"Color and Dispersion","question":"White light passing through a prism can separate into colors because of:","choices":["Dispersion","Reflection only","Polarization only","Absorption only"],"answer":"Dispersion","explanation":"Dispersion occurs because different wavelengths are refracted by different amounts."},{"topic":"Color and Dispersion","question":"Which color of visible light generally has the shortest wavelength?","choices":["Red","Yellow","Green","Violet"],"answer":"Violet","explanation":"Violet has the shortest wavelength in the visible spectrum."},{"topic":"Color and Dispersion","question":"An object appears red under white light mainly because it:","choices":["Absorbs red and reflects all other colors","Reflects red light more strongly than the other visible colors","Produces only ultraviolet light","Absorbs all visible light"],"answer":"Reflects red light more strongly than the other visible colors","explanation":"The perceived color depends largely on which wavelengths the object reflects."},{"topic":"Color and Dispersion","question":"A rainbow forms when sunlight undergoes processes including refraction, reflection, and:","choices":["Dispersion","Conduction","Magnetization","Evaporation"],"answer":"Dispersion","explanation":"Water droplets refract and disperse sunlight, with internal reflection contributing to a rainbow."},{"topic":"Color and Dispersion","question":"When the frequency of light increases, its wavelength in vacuum:","choices":["Increases","Decreases","Becomes zero","Remains unrelated to frequency"],"answer":"Decreases","explanation":"In vacuum, c = fλ, so wavelength decreases as frequency increases."},{"topic":"Polarization","question":"Polarization of light demonstrates that light has:","choices":["A transverse wave character","Only longitudinal behavior","No wave properties","No electric field"],"answer":"A transverse wave character","explanation":"Polarization is possible because electromagnetic waves are transverse."},{"topic":"Polarization","question":"A polarizing filter primarily restricts the direction of oscillation of the light's:","choices":["Electric field","Frequency","Speed in vacuum","Wavelength in vacuum"],"answer":"Electric field","explanation":"A linear polarizer transmits one orientation of the electric-field component."},{"topic":"Polarization","question":"Two ideal polarizers have their transmission axes perpendicular to each other. Ideally, the transmitted intensity is:","choices":["Maximum","Half the original intensity","Zero","Four times the original intensity"],"answer":"Zero","explanation":"Crossed ideal polarizers block the polarized light."},{"topic":"Polarization","question":"Polarized sunglasses reduce glare primarily by:","choices":["Blocking selected polarization directions","Increasing the speed of light","Changing red light into blue light","Producing sound waves"],"answer":"Blocking selected polarization directions","explanation":"Polarized lenses reduce light with an unwanted polarization orientation."},{"topic":"Polarization","question":"Which type of wave cannot be polarized?","choices":["Transverse wave","Electromagnetic wave","Longitudinal wave","Light wave"],"answer":"Longitudinal wave","explanation":"Polarization requires transverse oscillations."},{"topic":"Photons and Quantum Light","question":"A photon is best described as a quantum or packet of:","choices":["Electromagnetic energy","Sound energy only","Massive matter only","Gravitational pressure"],"answer":"Electromagnetic energy","explanation":"A photon is a quantum of electromagnetic radiation."},{"topic":"Photons and Quantum Light","question":"The energy of a photon is given by:","choices":["E = hf","E = h/f","E = f/h","E = h + f"],"answer":"E = hf","explanation":"Photon energy is proportional to frequency."},{"topic":"Photons and Quantum Light","question":"A higher-frequency photon has:","choices":["Less energy","More energy","No energy","The same energy as every photon"],"answer":"More energy","explanation":"Because E = hf, photon energy increases with frequency."},{"topic":"Photons and Quantum Light","question":"The photoelectric effect provides evidence for the:","choices":["Particle-like behavior of light","Absence of photons","Purely mechanical nature of light","Fact that light has no energy"],"answer":"Particle-like behavior of light","explanation":"The photoelectric effect is explained by discrete photon energy."},{"topic":"Photons and Quantum Light","question":"If the frequency of a photon doubles, its energy:","choices":["Halves","Doubles","Becomes four times larger","Does not change"],"answer":"Doubles","explanation":"Since E = hf, doubling frequency doubles photon energy."},{"topic":"Sources of Light","question":"An object that produces its own visible light is called:","choices":["Luminous","Opaque","Transparent","Translucent"],"answer":"Luminous","explanation":"Luminous objects emit visible light."},{"topic":"Sources of Light","question":"Which is a natural source of visible light?","choices":["The Sun","A flashlight","An LED lamp","A laser pointer"],"answer":"The Sun","explanation":"The Sun is a natural source of visible light."},{"topic":"Sources of Light","question":"An LED produces light primarily through:","choices":["Electroluminescence","Mechanical reflection","Sound resonance","Gravity"],"answer":"Electroluminescence","explanation":"LEDs produce light through processes in a semiconductor."},{"topic":"Sources of Light","question":"A laser beam is characterized by light that is highly:","choices":["Coherent and directional","Random and diffuse","Slow and non-electromagnetic","Sound-based"],"answer":"Coherent and directional","explanation":"Laser light is highly coherent and directional."},{"topic":"Sources of Light","question":"Incandescence produces light mainly because an object:","choices":["Is heated to a high temperature","Is placed in a vacuum","Is magnetized","Is cooled to absolute zero"],"answer":"Is heated to a high temperature","explanation":"Hot objects emit thermal radiation, including visible light when sufficiently hot."}];
+const bank = [...originalBank, ...addedWaves];
+
+let questions=[], i=0, score=0, topicNow="", answered=false, stats={};
+
+function shuffle(a){
+  for(let x=a.length-1;x>0;x--){
+    const y=Math.floor(Math.random()*(x+1));
+    [a[x],a[y]]=[a[y],a[x]];
+  }
+  return a;
+}
+function screen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function start(topic){
+  topicNow=topic;
+  questions=topic==='Mixed'?[...bank]:bank.filter(x=>x.topic===topic);
+  shuffle(questions); i=0; score=0; stats={};
+  questions.forEach(x=>{if(!stats[x.topic])stats[x.topic]={correct:0,total:0};stats[x.topic].total++;});
+  screen('quiz'); load();
+}
+function load(){
+  answered=false;
+  const x=questions[i];
+  document.getElementById('topic').textContent=x.topic;
+  document.getElementById('count').textContent=`Question ${i+1} / ${questions.length}`;
+  document.getElementById('bar').style.width=((i/questions.length)*100)+'%';
+  document.getElementById('q').textContent=x.question;
+  const box=document.getElementById('choices'); box.innerHTML='';
+  shuffle([...x.choices]).forEach((c,n)=>{
+    const b=document.createElement('button'); b.className='choice';
+    b.innerHTML=`<span class="letter">${String.fromCharCode(65+n)}</span><span>${c}</span>`;
+    b.onclick=()=>answer(c,b); box.appendChild(b);
+  });
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('next').style.display='none';
+}
+function answer(selected,button){
+  if(answered)return;
+  answered=true;
+  const x=questions[i], ok=selected===x.answer;
+  document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
+  if(ok){
+    score++;stats[x.topic].correct++;button.classList.add('correct');
+    document.getElementById('feedback').className='feedback show good';
+    document.getElementById('ft').textContent='✓ Correct';
+    document.getElementById('fx').innerHTML=x.explanation;
+  }else{
+    button.classList.add('wrong');
+    document.querySelectorAll('.choice').forEach(b=>{
+      if(b.querySelector('span:last-child').textContent===x.answer)b.classList.add('correct');
+    });
+    document.getElementById('feedback').className='feedback show bad';
+    document.getElementById('ft').textContent='✗ Incorrect';
+    document.getElementById('fx').innerHTML=`Correct answer: <b>${x.answer}</b><br>${x.explanation}`;
+  }
+  document.getElementById('next').style.display='block';
+}
+function next(){
+  i++;
+  if(i>=questions.length) result(); else load();
+}
+function result(){
+  screen('result');
+  const pct=Math.round(score/questions.length*100);
+  document.getElementById('score').textContent=`${score} / ${questions.length}`;
+  document.getElementById('percent').textContent=`${pct}%`;
+  let msg=pct>=90?'Excellent performance.':pct>=80?'Very good performance. Keep sharpening weak areas.':pct>=75?'Good work. Continue practicing application questions.':pct>=60?'Fair performance. Review the concepts you missed.':'Keep practicing. Focus on understanding the principles before memorizing.';
+  document.getElementById('message').textContent=msg;
+  const bd=document.getElementById('breakdown');bd.innerHTML='';
+  Object.entries(stats).forEach(([t,s])=>{
+    bd.innerHTML+=`<div class="row"><span>${t}</span><b>${s.correct} / ${s.total}</b></div>`;
+  });
+}
+function restart(){start(topicNow)}
+function home(){screen('home')}
+function toggleMode(){
+  document.body.classList.toggle('light');
+  const light=document.body.classList.contains('light');
+  document.getElementById('modeBtn').textContent=light?'☀ Light':'☾ Dark';
+  localStorage.setItem('wavesOpticsMode',light?'light':'dark');
+}
+if(localStorage.getItem('wavesOpticsMode')==='light'){
+  document.body.classList.add('light');
+  document.getElementById('modeBtn').textContent='☀ Light';
+}
+document.getElementById('questionTotal').textContent=`${bank.length} questions • 15 topic galleries`;
+</script>
+</body>
+</html>
